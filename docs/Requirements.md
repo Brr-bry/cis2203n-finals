@@ -1,4 +1,5 @@
 User Stories:
+
   US_01 - As a user, I want to read the Bible by book, chapter, and verse, so that I can easily navigate and understand specific passages.
   US_02 - As a user, I want to scroll smoothly through chapters, so that reading feels comfortable and uninterrupted.
   US_03 - As a user, I want to see the scripture of the day, so that I can have daily inspiration and guidance.
