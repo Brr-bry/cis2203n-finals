@@ -1,4 +1,7 @@
-**Activity Specs — ACT_SETTINGS**
+**Activity Specs**
+
+**ACT_SETTINGS** - The Activity ID
+**User Story:** US_05 — As a user, I want to change the font size of the text, so that I can read comfortably based on my preference.
 
 1. **TEXTSIZE_1** — Increases app-wide text size by one step per tap. Size steps: Small (12sp) → Medium (14sp) → Large (18sp) → Extra Large (22sp). Button is **disabled and grayed out** when already at Extra Large. Change is applied immediately app-wide. Value saved to `SharedPreferences` key: `pref_text_size` (String). Default: `"Medium"`.
 
