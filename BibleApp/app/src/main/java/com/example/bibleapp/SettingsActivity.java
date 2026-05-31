@@ -1,7 +1,9 @@
 package com.example.bibleapp;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -11,10 +13,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -134,6 +145,83 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
 
+        cbReminder.setOnCheckedChangeListener(
+                (buttonView, isChecked) -> {
+
+                    if (isChecked) {
+
+                        if (android.os.Build.VERSION.SDK_INT >= 33 &&
+                                checkSelfPermission(
+                                        Manifest.permission.POST_NOTIFICATIONS
+                                )
+                                        != PackageManager.PERMISSION_GRANTED) {
+
+                            cbReminder.setChecked(false);
+
+                            com.google.android.material.snackbar.Snackbar
+                                    .make(
+                                            buttonView,
+                                            "Enable notifications in Settings to use this feature.",
+                                            com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                                    )
+                                    .show();
+
+                            prefs.edit()
+                                    .putBoolean(
+                                            "pref_reminder_enabled",
+                                            false
+                                    )
+                                    .apply();
+
+                            return;
+                        }
+
+                        scheduleReminder();
+
+                    } else {
+
+                        cancelReminder();
+                    }
+
+                    prefs.edit()
+                            .putBoolean(
+                                    "pref_reminder_enabled",
+                                    isChecked
+                            )
+                            .apply();
+                });
+
+        btnVoice.setOnClickListener(v -> {
+
+            String[] voices = {
+                    "default",
+                    "deep",
+                    "high"
+            };
+
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("Select Voice")
+                    .setItems(voices, (dialog, which) -> {
+
+                        String selectedVoice =
+                                voices[which];
+
+                        prefs.edit()
+                                .putString(
+                                        "pref_bible_voice",
+                                        selectedVoice
+                                )
+                                .apply();
+
+                        btnVoice.setText(
+                                "Audio Bible Voice › "
+                                        + selectedVoice
+                        );
+                    })
+                    .show();
+        });
+
+        requestNotificationPermissionIfNeeded();
         setupBottomNav();
     }
 
@@ -145,7 +233,7 @@ public class SettingsActivity extends AppCompatActivity {
         tvFontPreview.setTextSize(fontSize);
 
         seekAudio.setProgress(
-                (int) (
+                (int)(
                         prefs.getFloat(
                                 "pref_audio_volume",
                                 1f
@@ -159,7 +247,7 @@ public class SettingsActivity extends AppCompatActivity {
                         1f
                 );
 
-        seekRate.setProgress((int) (rate * 100));
+        seekRate.setProgress((int)(rate * 100));
 
         cbReminder.setChecked(
                 prefs.getBoolean(
@@ -167,9 +255,57 @@ public class SettingsActivity extends AppCompatActivity {
                         true
                 )
         );
+
+        String voice =
+                prefs.getString(
+                        "pref_bible_voice",
+                        "default"
+                );
+
+        btnVoice.setText(
+                "Audio Bible Voice › " + voice
+        );
     }
 
-    private void setupBottomNav(){
+    private void scheduleReminder() {
+
+        Calendar now = Calendar.getInstance();
+
+        Calendar next7am = Calendar.getInstance();
+        next7am.set(Calendar.HOUR_OF_DAY, 7);
+        next7am.set(Calendar.MINUTE, 0);
+        next7am.set(Calendar.SECOND, 0);
+        next7am.set(Calendar.MILLISECOND, 0);
+
+        // if already past 7AM today → schedule tomorrow
+        if (now.after(next7am)) {
+            next7am.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        long delay =
+                next7am.getTimeInMillis() - now.getTimeInMillis();
+
+        OneTimeWorkRequest request =
+                new OneTimeWorkRequest.Builder(DailyVerseWorker.class)
+                        .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                        .build();
+
+        WorkManager.getInstance(this)
+                .enqueueUniqueWork(
+                        "daily_verse_once",
+                        ExistingWorkPolicy.REPLACE,
+                        request
+                );
+    }
+
+    private void cancelReminder() {
+
+        WorkManager.getInstance(this)
+                .cancelUniqueWork(
+                        "dailyVerseReminder"
+                );
+    }
+    private void setupBottomNav() {
 
         bottomNavigationView =
                 findViewById(R.id.bottom_nav);
@@ -229,7 +365,45 @@ public class SettingsActivity extends AppCompatActivity {
                 });
     }
 
+    private static final int NOTIF_PERMISSION_CODE = 100;
 
+    private void requestNotificationPermissionIfNeeded() {
 
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
 
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIF_PERMISSION_CODE
+                );
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String[] permissions,
+            int[] grantResults
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == NOTIF_PERMISSION_CODE) {
+
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // permission granted
+            } else {
+
+                // optional: disable reminder toggle
+                cbReminder.setChecked(false);
+            }
+        }
+    }
 }
