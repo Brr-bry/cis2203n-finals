@@ -35,16 +35,28 @@
         android:layout_height="0dp"
 
         android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/tv_appLabel"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_appLabel">
-
+        app:layout_constraintEnd_toEndOf="parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_greeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:fontFamily="cursive"
+                android:gravity="center"
+                android:text="A Blessed Day to You!"
+                android:textAlignment="center"
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
@@ -75,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:gravity="center"
-                        android:text="Book and Chapter"
+                        android:text="Passage"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -84,9 +96,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="sans-serif"
+                        android:fontFamily="cursive"
                         android:padding="5dp"
-                        android:text="Verse"
+                        android:text="Loading verse,,,"
                         android:textAlignment="center"
                         android:textSize="30sp" />
                 </LinearLayout>
@@ -100,7 +112,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="50dp"
                 android:gravity="center"
-                android:text="Library"
+                android:text="Featured Books"
                 android:textAlignment="textStart"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -148,6 +160,36 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#F0DDC6"
                     android:text="John"
+                    android:textAlignment="viewStart"
+                    android:textColor="#000000"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnMatthew"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#F0DDC6"
+                    android:text="Matthew"
+                    android:textAlignment="viewStart"
+                    android:textColor="#000000"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnActs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#F0DDC6"
+                    android:text="Acts"
+                    android:textAlignment="viewStart"
+                    android:textColor="#000000"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnRomans"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#F0DDC6"
+                    android:text="Romans"
                     android:textAlignment="viewStart"
                     android:textColor="#000000"
                     app:cornerRadius="8dp" />
