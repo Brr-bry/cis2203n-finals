@@ -81,6 +81,58 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        seekAudio.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(
+                            SeekBar seekBar,
+                            int progress,
+                            boolean fromUser) {}
+
+                    @Override
+                    public void onStartTrackingTouch(
+                            SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(
+                            SeekBar seekBar) {
+
+                        prefs.edit()
+                                .putFloat(
+                                        "pref_audio_volume",
+                                        seekBar.getProgress() / 100f
+                                )
+                                .apply();
+                    }
+                });
+
+        seekRate.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(
+                            SeekBar seekBar,
+                            int progress,
+                            boolean fromUser) {}
+
+                    @Override
+                    public void onStartTrackingTouch(
+                            SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(
+                            SeekBar seekBar) {
+
+                        float rate = seekBar.getProgress() / 100f;
+
+                        if (rate < 0.5f) rate = 0.5f;
+
+                        prefs.edit()
+                                .putFloat("pref_speech_rate", rate)
+                                .apply();
+                    }
+                });
 
         setupBottomNav();
     }
