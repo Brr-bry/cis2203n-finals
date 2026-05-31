@@ -69,6 +69,10 @@ public class ReadActivity extends AppCompatActivity {
                             );
                         } else if (id == R.id.nav_settings) {
                             startActivity(new Intent(ReadActivity.this, SettingsActivity.class));
+                            overridePendingTransition(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_right
+                            );
                         }
 
                         return true;
