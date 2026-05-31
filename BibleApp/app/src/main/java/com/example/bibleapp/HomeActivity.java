@@ -11,6 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -36,15 +43,24 @@ public class HomeActivity extends AppCompatActivity {
                 if(id == R.id.nav_search){
                     Intent newIntent = new Intent( HomeActivity.this, SearchActivity.class);
                     startActivity(newIntent);
-
+                    overridePendingTransition(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                    );
                 }else if(id == R.id.nav_read){
                     Intent newIntent = new Intent(HomeActivity.this, ReadActivity.class);
                     startActivity(newIntent);
-
+                    overridePendingTransition(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                    );
                 }else if(id == R.id.nav_settings){
                     Intent  newIntent= new Intent(HomeActivity.this, SettingsActivity.class);
                     startActivity(newIntent);
-
+                    overridePendingTransition(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                    );
                 }
 
                 return false;
@@ -68,6 +84,10 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(HomeActivity.this, ReadActivity.class);
         intent.putExtra("book", bookName);
         startActivity(intent);
+        overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+        );
     }
 
 
