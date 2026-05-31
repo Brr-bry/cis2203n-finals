@@ -69,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        loadVerse();
 
         findViewById(R.id.btnGenesis).setOnClickListener(v -> openBook("Genesis"));
         findViewById(R.id.btnPsalms).setOnClickListener(v -> openBook("Psalms"));
@@ -89,6 +90,64 @@ public class HomeActivity extends AppCompatActivity {
                 R.anim.slide_out_left
         );
     }
+    private void loadVerse() {
 
+        new Thread(() -> {
+
+            HttpURLConnection connection = null;
+
+            try {
+                URL url = new URL("https://beta.ourmanna.com/api/v1/get?format=json");
+
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream())
+                );
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                br.close();
+
+                JSONObject obj = new JSONObject(sb.toString());
+
+                String verse ="\"" +
+                        obj.getJSONObject("verse")
+                                .getJSONObject("details")
+                                .optString("text", "No verse found") + "\"";
+                String ref =
+                        obj.getJSONObject("verse")
+                                .getJSONObject("details")
+                                .optString("reference", "No passage found")
+                        ;
+
+                runOnUiThread(() ->{
+
+                            tvVerse.setText(verse);
+                            tvReference.setText(ref);
+                        }
+                );
+
+            } catch (Exception e) {
+
+                runOnUiThread(() ->
+                        tvVerse.setText("Unable to load verse.")
+                );
+
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
 
 }
