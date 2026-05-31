@@ -2,9 +2,126 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReadActivity">
+    android:background="#F2DFC7">
+
+    <ImageButton
+        android:id="@+id/btnAuto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        app:layout_constraintEnd_toStartOf="@+id/tvBookLabel"
+        app:layout_constraintHorizontal_bias="0.565"
+        app:layout_constraintStart_toEndOf="@+id/btnBack"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_tts_off" />
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvBookLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:gravity="center"
+        android:text="Book"
+
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintEnd_toStartOf="@id/tvChapter"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
+
+    <TextView
+        android:id="@+id/tvChapter"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Ch. 100"
+        android:textAlignment="center"
+        android:textSize="22sp"
+
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tvBookLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvBookLabel"
+        app:layout_constraintTop_toTopOf="@id/tvBookLabel"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+
+    <ImageButton
+        android:id="@+id/btnPrevious"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="12dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Previous chapter"
+
+        android:src="@drawable/ic_prev"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
+
+
+    <ImageButton
+        android:id="@+id/btnNext"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="12dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Next chapter"
+
+        android:src="@drawable/ic_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
+
+
+    <ScrollView
+        android:id="@+id/scrollVerses"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+        app:layout_constraintEnd_toStartOf="@id/btnNext"
+        app:layout_constraintStart_toEndOf="@id/btnPrevious"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <TextView
+            android:id="@+id/tvVerses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="6dp"
+            android:padding="16dp"
+            android:text="Loading Verse..."
+            android:textColor="#0B0B0B"
+            android:textSize="18sp" />
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
