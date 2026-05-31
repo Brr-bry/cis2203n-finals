@@ -139,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
             } catch (Exception e) {
 
                 runOnUiThread(() ->
-                        tvVerse.setText("Unable to load verse.")
+                        showDefaultVerse()
                 );
 
             } finally {
@@ -150,4 +150,12 @@ public class HomeActivity extends AppCompatActivity {
         }).start();
     }
 
+    private void showDefaultVerse() {
+        tvReference.setText("John 3:16");
+
+        tvVerse.setText(
+                "For God so loved the world that he gave his one and only Son, " +
+                        "that whoever believes in him shall not perish but have eternal life."
+        );
+    }
 }
