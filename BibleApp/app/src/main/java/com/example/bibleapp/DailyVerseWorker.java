@@ -1,4 +1,4 @@
-package com.example.bible;
+package com.example.bibleapp;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
